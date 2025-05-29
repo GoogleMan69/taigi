@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taiwanese Hokkien Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #f8f8f8 0%, #ebebeb 100%);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 60px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .slide-content {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .slide-title {
+            font-size: 3.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .slide-subtitle {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .slide-text {
+            font-size: 1.3rem;
+            color: #34495e;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .slide-list {
+            text-align: left;
+            font-size: 1.2rem;
+            color: #34495e;
+            line-height: 1.8;
+        }
+
+        .slide-list li {
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .slide-list li:before {
+            content: "🌸";
+            position: absolute;
+            left: -1rem;
+        }
+
+        /* Cherry Blossom Decorations */
+        .cherry-blossom {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .cherry-top-right {
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 300px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><g transform="translate(300,50)"><path d="M0,0 Q-50,-20 -100,10 Q-120,30 -100,50 Q-80,40 -50,60 Q-30,80 0,60 Q20,40 0,20 Q-20,0 0,0" fill="%23e74c3c" opacity="0.8"/><path d="M-20,40 Q-60,20 -90,50 Q-100,70 -80,80 Q-60,70 -30,90 Q-10,100 0,80 Q10,60 -10,50 Q-20,40 -20,40" fill="%23c0392b" opacity="0.7"/><path d="M-40,20 Q-70,0 -90,30 Q-95,45 -80,50 Q-65,45 -40,60 Q-25,70 -20,50 Q-15,30 -30,25 Q-40,20 -40,20" fill="%23e74c3c" opacity="0.6"/></g><g transform="translate(350,120)"><circle cx="0" cy="0" r="3" fill="%23fff" opacity="0.9"/><circle cx="-10" cy="-5" r="2" fill="%23fff" opacity="0.8"/><circle cx="8" cy="-3" r="2.5" fill="%23fff" opacity="0.7"/></g></svg>') no-repeat;
+            background-size: contain;
+        }
+
+        .cherry-bottom-left {
+            bottom: 0;
+            left: 0;
+            width: 350px;
+            height: 250px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 250"><g transform="translate(50,200)"><path d="M0,0 Q50,20 100,-10 Q120,-30 100,-50 Q80,-40 50,-60 Q30,-80 0,-60 Q-20,-40 0,-20 Q20,0 0,0" fill="%23e74c3c" opacity="0.8"/><path d="M20,-40 Q60,-20 90,-50 Q100,-70 80,-80 Q60,-70 30,-90 Q10,-100 0,-80 Q-10,-60 10,-50 Q20,-40 20,-40" fill="%23c0392b" opacity="0.7"/></g></svg>') no-repeat;
+            background-size: contain;
+        }
+
+        /* Mountain Silhouette */
+        .mountain-silhouette {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path d="M0,200 L0,120 Q200,80 400,100 Q600,60 800,90 Q1000,40 1200,80 L1200,200 Z" fill="%23bdc3c7" opacity="0.3"/><path d="M0,200 L0,140 Q300,100 600,120 Q900,80 1200,110 L1200,200 Z" fill="%2395a5a6" opacity="0.2"/></svg>') repeat-x;
+        }
+
+        /* Pagoda */
+        .pagoda {
+            position: absolute;
+            bottom: 120px;
+            right: 200px;
+            width: 80px;
+            height: 120px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120"><rect x="35" y="80" width="10" height="40" fill="%236c7b7f"/><polygon points="20,80 60,80 55,70 25,70" fill="%234a5568"/><polygon points="15,70 65,70 60,55 20,55" fill="%234a5568"/><polygon points="25,55 55,55 50,45 30,45" fill="%234a5568"/><circle cx="40" cy="40" r="8" fill="%23e74c3c"/></svg>') no-repeat center;
+            background-size: contain;
+            opacity: 0.6;
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(52, 73, 94, 0.9);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(231, 76, 60, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            transition: width 0.8s ease;
+            z-index: 100;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(52, 73, 94, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .auto-controls {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .auto-btn {
+            padding: 8px 16px;
+            background: rgba(52, 73, 94, 0.9);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .auto-btn:hover {
+            background: rgba(231, 76, 60, 0.9);
+        }
+
+        .auto-btn.active {
+            background: rgba(46, 204, 113, 0.9);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: rgba(44, 62, 80, 0.1);
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        /* Table styles */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: rgba(231, 76, 60, 0.1);
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 2.5rem;
+            }
+            
+            .slide-text {
+                font-size: 1.1rem;
+            }
+            
+            .slide {
+                padding: 30px;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide.active .slide-content {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Background Elements -->
+        <div class="cherry-blossom cherry-top-right"></div>
+        <div class="cherry-blossom cherry-bottom-left"></div>
+        <div class="mountain-silhouette"></div>
+        <div class="pagoda"></div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <!-- Slide Counter -->
+        <div class="slide-number" id="slideNumber">1 / 15</div>
+
+        <!-- Auto Controls -->
+        <div class="auto-controls">
+            <button class="auto-btn" id="autoBtn">Auto Play</button>
+            <button class="auto-btn" id="speedBtn">Speed: 5s</button>
+        </div>
+
+        <!-- Slides -->
+        <div class="slide active" id="slide-0">
+            <div class="slide-content">
+                <h1 class="slide-title">Taiwanese Hokkien in Daily Life</h1>
+                <p class="slide-subtitle">An International Student Perspective</p>
+                <p class="slide-text">Exploring bilingual language use in Taiwan and comparing with overseas Chinese Hokkien varieties</p>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-1">
+            <div class="slide-content">
+                <h1 class="slide-title">Language Landscape in Taiwan</h1>
+                <div class="slide-text">
+                    <p><strong>Official languages:</strong> Mandarin Chinese (國語), Taiwanese Hokkien (台語), Hakka (客家話), Indigenous languages</p>
+                    <p><strong>Usage:</strong> Mandarin (~83% fluent), Taiwanese Hokkien (~81% fluent)</p>
+                    <p><strong>Reality:</strong> Most Taiwanese switch between Mandarin and Hokkien daily</p>
+                </div>
+                <ul class="slide-list">
+                    <li>Japanese colonial period (1895-1945): Japanese imposed</li>
+                    <li>Post-1945: Mandarin dominant in education and government</li>
+                    <li>1990s onwards: Language equality movement</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-2">
+            <div class="slide-content">
+                <h1 class="slide-title">Code-Switching Patterns</h1>
+                <div class="slide-text">
+                    <h3>🏠 Taiwanese Families</h3>
+                    <ul class="slide-list">
+                        <li><strong>With grandparents:</strong> Primarily Taiwanese Hokkien</li>
+                        <li><strong>With parents:</strong> Mixed - start in Mandarin, switch to Hokkien for emotions</li>
+                        <li><strong>With siblings:</strong> Mostly Mandarin, Hokkien for humor or frustration</li>
+                    </ul>
+                    <h3>🏫 University/Public Spaces</h3>
+                    <ul class="slide-list">
+                        <li><strong>Formal settings:</strong> Mandarin dominant</li>
+                        <li><strong>Casual conversations:</strong> Frequent code-switching</li>
+                        <li><strong>Example:</strong> "老師，我 beh 去 toilet" (Teacher, I want to go toilet)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-3">
+            <div class="slide-content">
+                <h1 class="slide-title">Language Functions</h1>
+                <div class="slide-text">
+                    <h3>When Taiwanese Use Hokkien:</h3>
+                    <ul class="slide-list">
+                        <li><strong>Emotional expressions:</strong> Switch when angry or excited</li>
+                        <li><strong>Traditional contexts:</strong> Temples, festivals</li>
+                        <li><strong>Intimate conversations:</strong> Personal topics</li>
+                        <li><strong>Cultural identity:</strong> Expressing "Taiwanese-ness"</li>
+                    </ul>
+                    <h3>When They Use Mandarin:</h3>
+                    <ul class="slide-list">
+                        <li><strong>With international students:</strong> Always accommodate</li>
+                        <li><strong>Formal education:</strong> All classes</li>
+                        <li><strong>Professional settings:</strong> Work environments</li>
+                        <li><strong>Written communication:</strong> Official documents</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-4">
+            <div class="slide-content">
+                <h1 class="slide-title">Code-Switching Examples</h1>
+                <div class="slide-text">
+                    <h3>Common Mixing Patterns:</h3>
+                    <div class="code-block">
+                        <p><strong>1. Mandarin frame + Hokkien words:</strong></p>
+                        <p>"我真的很 gâu 煮菜" (I'm really good at cooking)</p>
+                        <p><strong>2. Emotional emphasis:</strong></p>
+                        <p>"你 siánn-mih 意思？" (What do you mean?)</p>
+                        <p><strong>3. Concepts that don't translate:</strong></p>
+                        <p>"真 gâu" (really skilled/clever) - no exact Mandarin equivalent</p>
+                    </div>
+                    <h3>Our Learning Experience:</h3>
+                    <ul class="slide-list">
+                        <li>Initial confusion when conversations switched</li>
+                        <li>Friends taught us language choice has emotional meaning</li>
+                        <li>Most Taiwanese friends translate patiently for us</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-5">
+            <div class="slide-content">
+                <h1 class="slide-title">Classical Literature & Poetry</h1>
+                <div class="slide-text">
+                    <h3>Tang Dynasty Poetry in Hokkien:</h3>
+                    <p>Tang Dynasty poems (618-907 CE) preserve better rhyme schemes when read in Hokkien</p>
+                    <div class="code-block">
+                        <p><strong>李白 - "靜夜思" (Quiet Night Thoughts)</strong></p>
+                        <p>床前明月光 (Chông-chiáⁿ bêng-goe̍h-kong)</p>
+                        <p>疑是地上霜 (Gî-sī tē-siōng-song)</p>
+                        <p>舉頭望明月 (Kí-thâu bōng bêng-goe̍h)</p>
+                        <p>低頭思故鄉 (Tê-thâu su kò͘-hiong)</p>
+                        <p><em>Perfect rhymes: kong/song/goe̍h/hiong - lost in modern Mandarin</em></p>
+                    </div>
+                    <p><strong>Modern Movement:</strong> Taiwan is currently the only country with a literary circle of Hokkien poets</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-6">
+            <div class="slide-content">
+                <h1 class="slide-title">Global Context</h1>
+                <div class="slide-text">
+                    <h3>Overseas Chinese Hokkien Varieties:</h3>
+                    <ul class="slide-list">
+                        <li><strong>Malaysian Hokkien:</strong> Community preservation language</li>
+                        <li><strong>Indonesian Hokkien:</strong> Historical influence, now declining</li>
+                        <li><strong>Singaporean Hokkien:</strong> Part of multilingual mixing</li>
+                        <li><strong>Taiwanese Hokkien:</strong> Regional identity language</li>
+                    </ul>
+                    <p>As international students, we wanted to understand how Taiwan's bilingual situation compares to other countries and what different patterns of language mixing exist worldwide.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-7">
+            <div class="slide-content">
+                <h1 class="slide-title">Malaysian Hokkien</h1>
+                <div class="slide-text">
+                    <h3>Similarities to Taiwanese:</h3>
+                    <ul class="slide-list">
+                        <li>Basic vocabulary and grammar structure</li>
+                        <li>Tone system (though slight variations)</li>
+                    </ul>
+                    <h3>Key Differences:</h3>
+                    <ul class="slide-list">
+                        <li><strong>Loanwords:</strong> Heavy Malay influence (cari = 找, makan = 吃)</li>
+                        <li><strong>Code-switching:</strong> Mixed with Malay, English, Mandarin, Cantonese</li>
+                        <li><strong>Usage context:</strong> Community preservation vs. regional identity</li>
+                        <li><strong>Example:</strong> "Lu mau pi mana?" (Where do you want to go?) - Malay syntax influence</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-8">
+            <div class="slide-content">
+                <h1 class="slide-title">Indonesian & Singaporean Hokkien</h1>
+                <div class="slide-text">
+                    <h3>Indonesian Hokkien:</h3>
+                    <ul class="slide-list">
+                        <li>Hokkien merchants traded in Southeast Asia since 10th century</li>
+                        <li>Almost all Chinese loanwords in Indonesian come from Hokkien</li>
+                        <li>Examples: mie (麵), lumpia (潤餅), teko (茶壺)</li>
+                        <li>Currently: Mainly elderly speakers, declining transmission</li>
+                    </ul>
+                    <h3>Singaporean Hokkien:</h3>
+                    <ul class="slide-list">
+                        <li>Multilingual mixing with English, Mandarin, Malay</li>
+                        <li>Part of "Singlish" integration</li>
+                        <li>Example: "Wah, sibeh expensive leh!" (Wow, very expensive!)</li>
+                        <li>Discouraged by government vs. Taiwan's recent promotion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-9">
+            <div class="slide-content">
+                <h1 class="slide-title">Linguistic Differences</h1>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Taiwanese</th>
+                            <th>Malaysian</th>
+                            <th>Singaporean</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tone preservation</strong></td>
+                            <td>Complete 7-tone system</td>
+                            <td>Mostly preserved</td>
+                            <td>Generally preserved</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Final consonants</strong></td>
+                            <td>Complete (-p, -t, -k, -h)</td>
+                            <td>Mostly complete</td>
+                            <td>Generally complete</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Loanwords</strong></td>
+                            <td>Japanese, Mandarin</td>
+                            <td>Malay integration</td>
+                            <td>English dominance</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-10">
+            <div class="slide-content">
+                <h1 class="slide-title">Cultural & Identity Functions</h1>
+                <div class="slide-text">
+                    <h3>Taiwan - Regional Identity & Literary Renaissance:</h3>
+                    <ul class="slide-list">
+                        <li>Political significance: Democracy movement, local identity</li>
+                        <li>Cultural revival: Pop music, literature, theater in Hokkien</li>
+                        <li>Educational support: Hokkien classes in schools</li>
+                        <li>Literary achievement: Only country with active Hokkien literary circle</li>
+                    </ul>
+                    <h3>Overseas - Ethnic Preservation:</h3>
+                    <ul class="slide-list">
+                        <li>Heritage maintenance: Connecting to ancestral roots</li>
+                        <li>Community bonding: In-group solidarity</li>
+                        <li>Declining vitality: Younger generations shifting to local languages</li>
+                        <li>Limited literary development: Contrast with Taiwan's renaissance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-11">
+            <div class="slide-content">
+                <h1 class="slide-title">Current Trends & Future</h1>
+                <div class="slide-text">
+                    <h3>Taiwan Developments:</h3>
+                    <ul class="slide-list">
+                        <li>Government support: Mother tongue education policies</li>
+                        <li>Digital presence: Hokkien input methods, online content</li>
+                        <li>Pop culture: Young artists using Hokkien creatively</li>
+                        <li>Academic recognition: University courses, research programs</li>
+                    </ul>
+                    <h3>Overseas Challenges:</h3>
+                    <ul class="slide-list">
+                        <li>Language shift: Younger generations preferring local languages</li>
+                        <li>Limited resources: Few educational materials or media</li>
+                        <li>Identity evolution: Integration vs. heritage preservation</li>
+                        <li>No literary movements: Unlike Taiwan's thriving scene</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-12">
+            <div class="slide-content">
+                <h1 class="slide-title">Our International Student Perspective</h1>
+                <div class="slide-text">
+                    <h3>What Surprised Us:</h3>
+                    <ul class="slide-list">
+                        <li>Seamless switching: How naturally Taiwanese people code-switch</li>
+                        <li>Emotional significance: Language choice carries meaning</li>
+                        <li>Generational patterns: Age affects language preference</li>
+                        <li>Literary culture: Taiwan's unique Hokkien poetry scene</li>
+                        <li>Accommodation: Quick switch to Mandarin for foreigners</li>
+                    </ul>
+                    <h3>Our Challenges:</h3>
+                    <ul class="slide-list">
+                        <li>Language barrier: Challenging when groups switch to Hokkien</li>
+                        <li>Social inclusion: Sometimes feel left out</li>
+                        <li>Cultural understanding: Missing embedded references</li>
+                        <li>Learning decision: Should we invest time in Hokkien?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-13">
+            <div class="slide-content">
+                <h1 class="slide-title">Key Takeaways</h1>
+                <ul class="slide-list" style="font-size: 1.4rem;">
+                    <li><strong>Regional Identity:</strong> Hokkien functions as identity marker alongside Mandarin</li>
+                    <li><strong>Literary Uniqueness:</strong> Taiwan is the only place with active Hokkien literary culture</li>
+                    <li><strong>Overseas Preservation:</strong> Serves ethnic community maintenance with local influences</li>
+                    <li><strong>Natural Bilingualism:</strong> Code-switching is functional, not deficient</li>
+                    <li><strong>Cultural Significance:</strong> Language choice carries identity and emotional meaning</li>
+                    <li><strong>International Insight:</strong> Observing bilingualism offers cultural understanding</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-14">
+            <div class="slide-content">
+                <h1 class="slide-title">Discussion Questions</h1>
+                <ul class="slide-list" style="font-size: 1.3rem;">
+                    <li>How has your observation of Taiwan's bilingual situation differed from your expectations?</li>
+                    <li>What similarities do you see between Taiwan's language situation and your home country?</li>
+                    <li>Should international students make an effort to learn Hokkien?</li>
+                    <li>How do overseas Hokkien varieties compare to what you've observed in Taiwan?</li>
+                    <li>What role does literature play in preserving and developing minority languages?</li>
+                </ul>
+                <p class="slide-subtitle" style="margin-top: 2rem;">Thank you for your attention! 謝謝大家！</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-container">
+            <button class="nav-btn" id="prevBtn">Previous</button>
+            <button class="nav-btn" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        class ChinesePresentationSystem {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                this.isAutoPlaying = false;
+                this.autoSpeed = 5000; // 5 seconds
+                this.autoInterval = null;
+                
+                this.initializeControls();
+                this.updateProgress();
+                this.addKeyboardControls();
+            }
+
+            initializeControls() {
+                // Navigation buttons
+                document.getElementById('prevBtn').addEventListener('click', () => this.previousSlide());
+                document.getElementById('nextBtn').addEventListener('click', () => this.nextSlide());
+                
+                // Auto play controls
+                document.getElementById('autoBtn').addEventListener('click', () => this.toggleAutoPlay());
+                document.getElementById('speedBtn').addEventListener('click', () => this.changeSpeed());
+                
+                // Touch/swipe support
+                this.addTouchControls();
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides - 1) {
+                    this.slides[this.currentSlide].classList.remove('active');
+                    this.slides[this.currentSlide].classList.add('prev');
+                    this.currentSlide++;
+                    this.slides[this.currentSlide].classList.add('active');
+                    this.slides[this.currentSlide].classList.remove('prev');
+                    this.updateProgress();
+                    this.updateButtons();
+                }
+            }
+
+            previousSlide() {
+                if (this.currentSlide > 0) {
+                    this.slides[this.currentSlide].classList.remove('active');
+                    this.currentSlide--;
+                    this.slides[this.currentSlide].classList.add('active');
+                    this.slides[this.currentSlide].classList.remove('prev');
+                    if (this.currentSlide + 1 < this.totalSlides) {
+                        this.slides[this.currentSlide + 1].classList.remove('prev');
+                    }
+                    this.updateProgress();
+                    this.updateButtons();
+                }
+            }
+
+            goToSlide(slideIndex) {
+                if (slideIndex >= 0 && slideIndex < this.totalSlides && slideIndex !== this.currentSlide) {
+                    this.slides[this.currentSlide].classList.remove('active');
+                    this.slides[this.currentSlide].classList.add('prev');
+                    this.currentSlide = slideIndex;
+                    this.slides[this.currentSlide].classList.add('active');
+                    this.slides[this.currentSlide].classList.remove('prev');
+                    this.updateProgress();
+                    this.updateButtons();
+                }
+            }
+
+            updateProgress() {
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+                document.getElementById('slideNumber').textContent = `${this.currentSlide + 1} / ${this.totalSlides}`;
+            }
+
+            updateButtons() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                prevBtn.disabled = this.currentSlide === 0;
+                nextBtn.disabled = this.currentSlide === this.totalSlides - 1;
+            }
+
+            toggleAutoPlay() {
+                const autoBtn = document.getElementById('autoBtn');
+                
+                if (this.isAutoPlaying) {
+                    this.stopAutoPlay();
+                    autoBtn.textContent = 'Auto Play';
+                    autoBtn.classList.remove('active');
+                } else {
+                    this.startAutoPlay();
+                    autoBtn.textContent = 'Stop Auto';
+                    autoBtn.classList.add('active');
+                }
+            }
+
+            startAutoPlay() {
+                this.isAutoPlaying = true;
+                this.autoInterval = setInterval(() => {
+                    if (this.currentSlide < this.totalSlides - 1) {
+                        this.nextSlide();
+                    } else {
+                        // Loop back to start or stop
+                        this.goToSlide(0);
+                    }
+                }, this.autoSpeed);
+            }
+
+            stopAutoPlay() {
+                this.isAutoPlaying = false;
+                if (this.autoInterval) {
+                    clearInterval(this.autoInterval);
+                    this.autoInterval = null;
+                }
+            }
+
+            changeSpeed() {
+                const speedBtn = document.getElementById('speedBtn');
+                const speeds = [3000, 5000, 7000, 10000]; // 3s, 5s, 7s, 10s
+                const speedLabels = ['3s', '5s', '7s', '10s'];
+                
+                const currentIndex = speeds.indexOf(this.autoSpeed);
+                const nextIndex = (currentIndex + 1) % speeds.length;
+                
+                this.autoSpeed = speeds[nextIndex];
+                speedBtn.textContent = `Speed: ${speedLabels[nextIndex]}`;
+                
+                // Restart auto play with new speed if currently playing
+                if (this.isAutoPlaying) {
+                    this.stopAutoPlay();
+                    this.startAutoPlay();
+                    document.getElementById('autoBtn').classList.add('active');
+                }
+            }
+
+            addKeyboardControls() {
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowRight':
+                        case ' ':
+                        case 'PageDown':
+                            e.preventDefault();
+                            this.nextSlide();
+                            break;
+                        case 'ArrowLeft':
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.previousSlide();
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goToSlide(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goToSlide(this.totalSlides - 1);
+                            break;
+                        case 'Escape':
+                            e.preventDefault();
+                            this.stopAutoPlay();
+                            document.getElementById('autoBtn').textContent = 'Auto Play';
+                            document.getElementById('autoBtn').classList.remove('active');
+                            break;
+                        case 'p':
+                        case 'P':
+                            e.preventDefault();
+                            this.toggleAutoPlay();
+                            break;
+                    }
+                    
+                    // Number keys for direct slide access
+                    if (e.key >= '1' && e.key <= '9') {
+                        const slideNum = parseInt(e.key) - 1;
+                        if (slideNum < this.totalSlides) {
+                            this.goToSlide(slideNum);
+                        }
+                    }
+                });
+            }
+
+            addTouchControls() {
+                let startX = 0;
+                let startY = 0;
+                const container = document.querySelector('.presentation-container');
+                
+                container.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
+                
+                container.addEventListener('touchend', (e) => {
+                    if (!startX || !startY) return;
+                    
+                    const endX = e.changedTouches[0].clientX;
+                    const endY = e.changedTouches[0].clientY;
+                    
+                    const diffX = startX - endX;
+                    const diffY = startY - endY;
+                    
+                    // Horizontal swipe detection
+                    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                        if (diffX > 0) {
+                            // Swipe left - next slide
+                            this.nextSlide();
+                        } else {
+                            // Swipe right - previous slide
+                            this.previousSlide();
+                        }
+                    }
+                    
+                    startX = 0;
+                    startY = 0;
+                }, { passive: true });
+                
+                // Mouse wheel support
+                container.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    if (e.deltaY > 0) {
+                        this.nextSlide();
+                    } else {
+                        this.previousSlide();
+                    }
+                }, { passive: false });
+            }
+
+            // Method to programmatically control the presentation
+            playScript(script) {
+                // Script format: [slideIndex, duration] pairs
+                // Example: [[0, 3000], [1, 5000], [2, 4000]]
+                let scriptIndex = 0;
+                
+                const executeScript = () => {
+                    if (scriptIndex < script.length) {
+                        const [slideIndex, duration] = script[scriptIndex];
+                        this.goToSlide(slideIndex);
+                        
+                        setTimeout(() => {
+                            scriptIndex++;
+                            executeScript();
+                        }, duration);
+                    }
+                };
+                
+                executeScript();
+            }
+
+            // Method to generate automatic script based on slide content
+            generateAutoScript() {
+                const script = [];
+                for (let i = 0; i < this.totalSlides; i++) {
+                    const slide = this.slides[i];
+                    const content = slide.querySelector('.slide-content');
+                    const textLength = content.textContent.length;
+                    
+                    // Calculate duration based on content length
+                    // Base time of 3 seconds + 20ms per character
+                    const duration = Math.max(3000, Math.min(textLength * 20, 15000));
+                    script.push([i, duration]);
+                }
+                return script;
+            }
+        }
+
+        // Initialize presentation system
+        const presentation = new ChinesePresentationSystem();
+
+        // Example of programmatic control
+        // Uncomment to use:
+        
+        // Custom script example
+        // const customScript = [
+        //     [0, 4000],  // Title slide - 4 seconds
+        //     [1, 6000],  // Language landscape - 6 seconds
+        //     [2, 7000],  // Code-switching - 7 seconds
+        //     [3, 6000],  // Functions - 6 seconds
+        //     [4, 8000],  // Examples - 8 seconds
+        //     [5, 7000],  // Literature - 7 seconds
+        //     [6, 5000],  // Global context - 5 seconds
+        //     [7, 6000],  // Malaysian - 6 seconds
+        //     [8, 6000],  // Indonesian/Singaporean - 6 seconds
+        //     [9, 5000],  // Differences table - 5 seconds
+        //     [10, 7000], // Cultural functions - 7 seconds
+        //     [11, 6000], // Trends - 6 seconds
+        //     [12, 7000], // Student perspective - 7 seconds
+        //     [13, 5000], // Takeaways - 5 seconds
+        //     [14, 8000]  // Discussion - 8 seconds
+        // ];
+
+        // Auto-generate script based on content
+        const autoScript = presentation.generateAutoScript();
+
+        // Expose methods for external control
+        window.presentationControl = {
+            next: () => presentation.nextSlide(),
+            prev: () => presentation.previousSlide(),
+            goto: (slide) => presentation.goToSlide(slide),
+            autoPlay: () => presentation.toggleAutoPlay(),
+            playScript: (script) => presentation.playScript(script || autoScript),
+            stop: () => presentation.stopAutoPlay()
+        };
+
+        // Optional: Start auto-generated script after 2 seconds
+        // setTimeout(() => {
+        //     presentation.playScript(autoScript);
+        // }, 2000);
+
+        console.log('🌸 Chinese Presentation System Initialized');
+        console.log('📚 Use keyboard controls:');
+        console.log('  → Arrow keys or Space/PageDown for navigation');
+        console.log('  → P key to toggle auto-play');
+        console.log('  → Number keys (1-9) for direct slide access');
+        console.log('  → Escape to stop auto-play');
+        console.log('🎮 Use window.presentationControl for programmatic control');
+    </script>
+</body>
+</html>
